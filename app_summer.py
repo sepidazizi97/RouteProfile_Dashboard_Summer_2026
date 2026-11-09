@@ -129,12 +129,20 @@ st.markdown(
 APP_FOLDER = Path(__file__).resolve().parent
 
 SYSTEM_FILE_CANDIDATES = [
+    APP_FOLDER / "data" / 'Summary_System_Summer_Completed.xlsx',
+    APP_FOLDER / "data" / 'Summary System Summer.xlsx',
+    APP_FOLDER / "data" / 'Summary System.xlsx',
+    APP_FOLDER / "data" / 'Summary_System_Summer.xlsx',
     APP_FOLDER / "data" / 'Summary_System_Summer_Completed.csv',
     APP_FOLDER / "data" / 'Summary System Summer.csv',
     APP_FOLDER / "data" / 'Summary_System_Summer.csv',
     APP_FOLDER / "data" / 'Summary_System_Summer_2026.csv',
     APP_FOLDER / "data" / 'SYSTEM_SUMMARY_SUMMER_2026.csv',
     APP_FOLDER / "data" / 'Summary System.csv',
+    APP_FOLDER / 'Summary_System_Summer_Completed.xlsx',
+    APP_FOLDER / 'Summary System Summer.xlsx',
+    APP_FOLDER / 'Summary System.xlsx',
+    APP_FOLDER / 'Summary_System_Summer.xlsx',
     APP_FOLDER / 'Summary_System_Summer_Completed.csv',
     APP_FOLDER / 'Summary System Summer.csv',
     APP_FOLDER / 'Summary_System_Summer.csv',
@@ -146,10 +154,12 @@ SYSTEM_FILE_CANDIDATES = [
 ROUTE_PROFILE_FILE_CANDIDATES = [
     APP_FOLDER / "data" / 'RouteProfile_Summer(1).xlsx',
     APP_FOLDER / "data" / 'RouteProfile_Summer.xlsx',
+    APP_FOLDER / "data" / 'RouteProfile.xlsx',
     APP_FOLDER / "data" / 'Route Profile Summer.xlsx',
     APP_FOLDER / "data" / 'Route Profile.xlsx',
     APP_FOLDER / 'RouteProfile_Summer(1).xlsx',
     APP_FOLDER / 'RouteProfile_Summer.xlsx',
+    APP_FOLDER / 'RouteProfile.xlsx',
     APP_FOLDER / 'Route Profile Summer.xlsx',
     APP_FOLDER / 'Route Profile.xlsx',
 ]
@@ -197,13 +207,16 @@ def load_system_data(
     system_modified_time,
 ):
     """
-    Load CSV files from the deployed repository.
+    Load the CSV or Excel summary from the deployed repository.
 
     The modification times are included in the cache key. Therefore, when
     Streamlit redeploys after a new GitHub commit, the changed files receive
     a new cache entry automatically.
     """
-    system_df = pd.read_csv(system_file_path)
+    if Path(system_file_path).suffix.lower() == ".xlsx":
+        system_df = pd.read_excel(system_file_path)
+    else:
+        system_df = pd.read_csv(system_file_path)
 
     return standardize_column_names(system_df)
 
